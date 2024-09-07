@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Louis Barbier - Lab 2</title>
+</head>
+<body>
+    <button onclick="printDate(true)">Date-Time on Page</button>
+    <button onclick="printDate(false)">Date-Time on Pop-Up</button>
+    <label for="hourFormat">Hour format : </label>
+    <select id="hourFormat">
+        <option value="12" selected>12 Hours</option>
+        <option value="24">24 Hours</option>
+    </select>
+    <div id="date">The count goes here.</div>
+
+    <script lang="text/javascript">
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+        function getTextDate () {
+            date = new Date;
+
+            year = date.getFullYear();
+            month = date.getMonth();
+            day = date.getDate();
+            hour = date.getHours();
+            minutes = date.getMinutes();
+
+            textDate = "The date today is : " + monthNames[month] + " " + day + ", " + year;
+
+            ending = "";
+
+            if (document.getElementById('hourFormat').value == '12') {
+                if (hour > 11) {
+                    ending = " pm"
+                    if (hour > 12) {
+                        hour -= 12;
+                    }
+                } else {
+                    ending = " am"
+                    if (hour == 0) {
+                        hour = 12;
+                    }
+                }
+            }
+            
+            textTime = "and the current time is : " + hour + ":" + minutes + ending;
+
+            console.log(textDate + "\n" + textTime);
+
+            return [textDate, textTime]
+        }
+
+        function printDate (onPage) {
+            [textDate, textTime] = getTextDate();
+
+            if (onPage) {
+                document.getElementById('date').innerHTML = textDate + "<br>" + textTime;
+            } else {
+                alert(textDate + "\n" + textTime);
+            }
+        }
+    </script>
+</body>
+</html>
