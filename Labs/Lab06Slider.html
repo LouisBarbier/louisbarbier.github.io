@@ -9,11 +9,15 @@
 
 <BODY>
 
-<canvas id="gl-canvas" width="512" height="512" "style=border >
+<canvas id="gl-canvas" width="512" height="512" style="border: black 2px solid;" >
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
-
+<div>
+  <label for="slider">Points to render : <span id="nbPointsToRender"></span></label>
+  <br>
+  <input id="slider" type="range" min="0" max="9" step="1">
+</div>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es

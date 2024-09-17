@@ -2,7 +2,8 @@
 var gl;
 var points;
 var colors;
-var sliderVal = 1;
+var sliderVal = document.getElementById('slider').value;
+const nbPointsToRender =  document.getElementById("nbPointsToRender");
 
 init();
 
@@ -14,27 +15,27 @@ function init()
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
     points=[
-    vec2(-0.95,0.95),
-    vec2(0,0.95),
-    vec2(0.95,0.95),
-    vec2(-0.95,0.0),
-    vec2(0,0.0),
-    vec2(0.95,0.0),
-    vec2(-0.95,-0.95),
-    vec2(0.0,-0.95),
-    vec2(0.95,-0.95)
+    vec2( -0.9 , 0.9 ),
+    vec2( 0 , 0.9 ),
+    vec2( 0.9 , 0.9 ),
+    vec2( -0.9 , 0.0 ),
+    vec2( 0 , 0.0 ),
+    vec2( 0.9 , 0.0 ),
+    vec2( -0.9 , -0.9 ),
+    vec2( 0.0 , -0.9 ),
+    vec2( 0.9 , -0.9 )
     ];
 
     colors=[
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 ),
-    vec4(     ,     ,     , 1.0 )
+    vec4( 1 , 0 , 0 , 1.0 ),
+    vec4( 0 , 1 , 0 , 1.0 ),
+    vec4( 0 , 0 , 1 , 1.0 ),
+    vec4( 1 , 0 , 1 , 1.0 ),
+    vec4( 0 , 1 , 1 , 1.0 ),
+    vec4( 1 , 1 , 0 , 1.0 ),
+    vec4( 0 , 0 , 0 , 1.0 ),
+    vec4( 0.5 , 0.5 , 0.5 , 1.0 ),
+    vec4( 1 , 0.5 , 0.25 , 1.0 )
     ];
     
     //
@@ -69,6 +70,11 @@ function init()
     gl.enableVertexAttribArray( colorLoc );
 
     // slider event listener
+    document.getElementById('slider').addEventListener('change', function (e) {
+        sliderVal = this.value;
+        
+        render();
+    })
 
     render();
 };
@@ -79,5 +85,7 @@ function render() {
     // use the variable from the slider event listener to determine how many
     // points to render
 
-    gl.drawArrays( gl.POINTS, 0,      );
+    nbPointsToRender.innerText = sliderVal;
+
+    gl.drawArrays( gl.POINTS, 0, sliderVal );
 }
