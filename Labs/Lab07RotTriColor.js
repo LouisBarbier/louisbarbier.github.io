@@ -32,9 +32,9 @@ function init()
     gl.useProgram(program);
 
     var vertices = [
-        vec2(      ,      ),
-        vec2(      ,      ),
-        vec2(      ,      )
+        vec2( 0 , 0.5 ),
+        vec2( 0.5 , -0.5 ),
+        vec2( -0.5 , -0.5 )
     ];
 
 
@@ -53,17 +53,35 @@ function init()
     thetaLoc = gl.getUniformLocation( program, "uTheta" );
 
     //define the uniform variable in the shader, aColor
+    
 
 
-
-   // button listener here, toggle rotation
-
+    // button listener here, toggle rotation
+    document.getElementById("Rotation").addEventListener('click', function (e) {
+        rotation = !rotation;
+    })
 
 
    // keyboard listener here
    // '1' = toggle rotation
    // '2' = triangle is red (use the variable named color)
    // '3' = triangle is green (use the variable named color)
+   window.onkeydown = function(event) {
+        var key = String.fromCharCode(event.keyCode);
+        switch(key) {
+            case '1':
+                direction = !direction;
+                break;
+
+            case '2':
+                delay /= 2.0;
+                break;
+
+            case '3':
+                delay *= 2.0;
+                break;
+        }
+    };
 
 
 
