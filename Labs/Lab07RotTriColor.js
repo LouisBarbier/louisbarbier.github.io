@@ -53,7 +53,7 @@ function init()
     thetaLoc = gl.getUniformLocation( program, "uTheta" );
 
     //define the uniform variable in the shader, aColor
-    
+    colorLoc = gl.getUniformLocation( program, "aColor" );
 
 
     // button listener here, toggle rotation
@@ -70,15 +70,15 @@ function init()
         var key = String.fromCharCode(event.keyCode);
         switch(key) {
             case '1':
-                direction = !direction;
+                rotation = !rotation;
                 break;
 
             case '2':
-                delay /= 2.0;
+                color = vec4(1.0, 0.0, 0.0, 1.0)
                 break;
 
             case '3':
-                delay *= 2.0;
+                color = vec4(0.0, 1.0, 0.0, 1.0);
                 break;
         }
     };
