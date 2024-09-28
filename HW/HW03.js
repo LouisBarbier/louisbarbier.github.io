@@ -1,6 +1,18 @@
 "use strict";
 var gl;
-var points;
+var pointsI;
+var pointsU;
+
+var color;
+var colorLoc;
+
+var t = 0;
+var tLoc;
+
+var morphing = true;
+
+var v = 0.01;
+var delay = 50;
 
 init();
 
@@ -11,9 +23,34 @@ function init()
     gl = canvas.getContext('webgl2');
     if ( !gl ) { alert( "WebGL isn't available" ); }
 
-    points=[
-        vec2( -1 , 0 ),
-        vec2( 1 , 0 )
+    pointsI=[
+        vec2( -0.95 , 0.95 ),
+        vec2( 0.95 , 0.95 ),
+        vec2( 0.95 , 0.5 ),
+        vec2( 0.45 , 0.5 ),
+        vec2( 0.45 , -0.5 ),
+        vec2( 0.95 , -0.5 ),
+        vec2( 0.95 , -0.95 ),
+        vec2( -0.95 , -0.95 ),
+        vec2( -0.95 , -0.5 ),
+        vec2( -0.45 , -0.5 ),
+        vec2( -0.45 , 0.5 ),
+        vec2( -0.95 , 0.5 )
+    ];
+
+    pointsU=[
+        vec2( 0.95 , 0.95 ), //
+        vec2( 0.95 , -0.95 ), //
+        vec2( 0.57 , -0.95 ),
+        vec2( 0.19 , -0.95 ),
+        vec2( -0.19 , -0.95 ),
+        vec2( -0.57 , -0.95 ),
+        vec2( -0.95 , -0.95 ), //
+        vec2( -0.95 , 0.95 ), //
+        vec2( -0.45 , 0.95 ),
+        vec2( -0.45 , -0.45 ),
+        vec2( 0.45 , -0.45 ),
+        vec2( 0.45 , 0.95 )
     ];
     
     //
@@ -27,17 +64,46 @@ function init()
     var program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
-    // Load the data into the GPU
+    // Load the I points into the GPU
 
-    var bufferId = gl.createBuffer();
-    gl.bindBuffer( gl.ARRAY_BUFFER, bufferId );
-    gl.bufferData( gl.ARRAY_BUFFER, flatten(points), gl.STATIC_DRAW );
+    var bufferI = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferI );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsI), gl.STATIC_DRAW );
 
-    // Associate out shader variables with our data buffer
+    // Associate out shader variables with our I points buffer
 
-    var positionLoc = gl.getAttribLocation( program, "aPosition" );
-    gl.vertexAttribPointer( positionLoc , 2, gl.FLOAT, false, 0, 0 );
-    gl.enableVertexAttribArray( positionLoc );
+    var positionLocI = gl.getAttribLocation( program, "iPosition" );
+    gl.vertexAttribPointer( positionLocI , 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( positionLocI );
+    
+
+    // Load the U points into the GPU
+
+    var bufferU = gl.createBuffer();
+    gl.bindBuffer( gl.ARRAY_BUFFER, bufferU );
+    gl.bufferData( gl.ARRAY_BUFFER, flatten(pointsU), gl.STATIC_DRAW );
+
+    // Associate out shader variables with our U points buffer
+
+    var positionLocU = gl.getAttribLocation( program, "uPosition" );
+    gl.vertexAttribPointer( positionLocU , 2, gl.FLOAT, false, 0, 0 );
+    gl.enableVertexAttribArray( positionLocU );
+
+    //define the uniform variable in the shader, aColor
+    colorLoc = gl.getUniformLocation( program, "aColor" );
+
+    //define the uniform variable in the shader, t
+    tLoc = gl.getUniformLocation( program, "t" );
+
+    document.getElementById('toggle').addEventListener('click', function () {
+        morphing = !morphing;
+        if (morphing) {
+            this.value = 'ON';
+            render(); // We reactivate the calls
+        } else {
+            this.value = 'OFF';
+        }
+    });
 
     render();
 };
@@ -45,8 +111,28 @@ function init()
 function render() {
     gl.clear( gl.COLOR_BUFFER_BIT );
 
-    recursiveLevel.innerText = sliderVal;
+    // if (morphing) { // Instead we stop the calls completely (so we don't call the GPU for nothing)
+        t += v;
+        if ((t > 1) || (t < 0)) {
+            v *= -1;
 
-    // gl.drawArrays( gl.POINTS, 0, points.length );
-    gl.drawArrays( gl.LINE_STRIP, 0, points.length );
+            if (t > 1) t = 1;
+            else t = 0;
+        }
+    // }
+    
+    // console.log('t : ' + t);
+
+    gl.uniform1f(tLoc, t);
+
+    gl.uniform4fv(colorLoc, vec4(t, 0.0, 1-t, 1.0));
+
+    if (morphing) {
+        setTimeout(
+            function (){requestAnimationFrame(render);}, delay
+        );
+    }
+
+    gl.drawArrays( gl.POINTS, 0, pointsI.length );
+    gl.drawArrays( gl.LINE_LOOP, 0, pointsI.length );
 }

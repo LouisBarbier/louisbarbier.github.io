@@ -3,7 +3,7 @@
 
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-<title>Home Work 2 - Louis Barbier</title>
+<title>HW03 - Louis Barbier</title>
 
 </HEAD>
 
@@ -13,33 +13,40 @@
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
-<script id="vertex-shader" type="x-shader/x-vertex">
-  #version 300 es
-  in vec4 iPosition;
-  in vec4 uPosition;
+<div>
+  <label for="toggle">Morph :</label>
+  <input id="toggle" type="button" value="ON">
+</div>
 
-  uniform float t;
-  
-  void
-  main()
-  {
-    gl_Position.x = ???;
-    gl_Position.y = ???;
-    gl_Position.z = 0.0;
-    gl_Position.w = 1.0;
-  }
+<script id="vertex-shader" type="x-shader/x-vertex">
+#version 300 es
+in vec4 iPosition;
+in vec4 uPosition;
+
+uniform float t;
+
+void
+main()
+{
+  gl_PointSize = 10.0;
+
+  gl_Position.x = t * iPosition.x + ( 1.0 -  t ) * uPosition.x;
+  gl_Position.y = t * iPosition.y + ( 1.0 -  t ) * uPosition.y;
+  gl_Position.z = 0.0;
+  gl_Position.w = 1.0;
+}
 </script>
 
 <script id="fragment-shader" type="x-shader/x-fragment">
-  #version 300 es
-  precision mediump float;
-  out vec4 fColor;
-
-  void
-  main()
-  {
-    fColor = vec4(1.0,0.0,0.0,1.0);
-  }
+#version 300 es
+precision mediump float;
+uniform vec4 aColor;
+out vec4 fColor;
+void
+main()
+{
+  fColor = aColor;
+}
 </script>
 <script type="text/javascript" src="../Common/initShaders.js"></script>
 <script type="text/javascript" src="../Common/MVnew.js"></script>
