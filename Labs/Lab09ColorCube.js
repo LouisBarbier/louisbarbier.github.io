@@ -10,7 +10,8 @@ var zAxis = 2;
 var theta = [0, 0, 0];
 var thetaLoc;
 var flag = true;
-var numElements = 29;
+var numElements = 29; // Originaly 29
+// When we reduce the number it reduces the number of triangle
 
     var vertices = [
         vec3(-0.5, -0.5,  0.5),
@@ -37,12 +38,12 @@ var numElements = 29;
 // indices of the 12 triangles that compise the cube
 
 var indices = [
-    1, 0, 3, 2, 255,
-    2, 3, 7, 2, 255,
-    3, 0, 4, 7, 255,
-    6, 5, 1, 2, 255,
-    4, 5, 6, 7, 255,
-    5, 4, 0, 1
+    1, 0, 3, 2, 255, // 1, 0, 3 + 1, 3, 2
+    2, 3, 7, 6, 255, // 2, 3, 7 + 2, 7, 2 (Shouldn't be 2, 7, 2 but 2, 7, 6 => Replace 2, 3, 7, 2 by 2, 3, 7, 6)
+    3, 0, 4, 7, 255, // 3, 0, 4 + 3, 4, 7
+    6, 5, 1, 2, 255, // 6, 5, 1 + 6, 1, 2
+    4, 5, 6, 7, 255, // 4, 5, 6 + 4, 6, 7
+    5, 4, 0, 1       // 5, 4, 0 + 5, 0, 1
 ];
 
 init();
