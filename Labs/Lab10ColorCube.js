@@ -165,7 +165,7 @@ function render()
     // now, render the axes
     gl.drawArrays(gl.LINES, numPositions, 6);
 
-    if (playing) {
+    if (playing) { // We stop the calls completely
         requestAnimationFrame(render);
     }
 }
