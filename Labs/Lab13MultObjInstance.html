@@ -2,7 +2,7 @@
 <html>
 
 <body>
-<canvas id="gl-canvas" width="512" height="512"> </canvas>
+<canvas id="gl-canvas" width="512" height="512" style="border: 1px solid black;"> </canvas>
 <title>Lab 13 Multiple Object Instance</title>
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
@@ -12,18 +12,20 @@ in  vec4 aColor;
 out vec4 vColor;
 
 int transX = -1;
+int transY = -1;
 
 uniform mat4 uModelViewMatrix;
 uniform mat4 uProjectionMatrix;
 
 void main()
 {
-   transX += gl_InstanceID;
-    // Remeber: thse matrices are column-major
+    transX += gl_InstanceID % 3;
+    transY += gl_InstanceID / 3;
+    // Remember: these matrices are column-major
     mat4 Tx = mat4(1.0,  0.0,  0.0, 0.0,
 		   0.0,  1.0,  0.0, 0.0,
 		   0.0,  0.0,  1.0, 0.0,
-		transX,  0.0,  0.0, 1.0);
+		transX,  transY,  0.0, 1.0);
     mat4 Scale = mat4(0.5,  0.0,  0.0, 0.0,
 		      0.0,  0.5,  0.0, 0.0,
 		      0.0,  0.0,  0.5, 0.0,
@@ -37,6 +39,17 @@ void main()
     vColor = aColor;
 }
 </script>
+
+<!--
+Can you explain how the instance id, transX, and the modelview matrix are updated in the vertex
+shader and work together to render three cubes?
+
+gl.drawArraysInstanced(gl.TRIANGLES, 0, numPositions, 9); indicate that the modelview matrix have to be drawn 9 times.
+Each time an instance is drawn it has a different id (starting from 0 and ending at 8).
+
+transX, initially at -1 (because the untranslated is at (0,0,0)) indicate the translation on the X vector.
+transX is incremented by instance id % 3 so the the instance is at X = -1, the second at X = 0 and the third at X = 1;
+-->
 
 <script id="fragment-shader" type="x-shader/x-fragment">
 #version 300 es

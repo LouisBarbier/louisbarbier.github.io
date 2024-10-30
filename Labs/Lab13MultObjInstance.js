@@ -128,5 +128,5 @@ function render(){
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
     gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
 
-    gl.drawArraysInstanced(gl.TRIANGLES, 0, numPositions,3);
+    gl.drawArraysInstanced(gl.TRIANGLES, 0, numPositions, 9);
 }
