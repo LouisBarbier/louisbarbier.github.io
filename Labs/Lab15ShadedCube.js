@@ -27,12 +27,12 @@ var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
 
 // original
-//
+/*
 var materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
 var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
 var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
 var materialShininess = 100.0;
-//
+*/
 
 // black plastic
 /*
@@ -105,6 +105,14 @@ var materialDiffuse  = vec4(0.2775 , 0.2775 , 0.2775 , 1.0);
 var materialSpecular  = vec4(0.773911 , 0.773911 , 0.773911 , 1.0);
 var materialShininess = 89.6;
 */
+
+// Custom
+//
+var materialAmbient  = vec4(0.1 , 1.0 , 0.1 , 1.0); // Mostly affect shadows
+var materialDiffuse  = vec4(1.0 , 0.1 , 0.1 , 1.0); // Mostly affect overall light (where there is no shadow)
+var materialSpecular  = vec4(0.1 , 0.1 , 1.0 , 1.0); // Mostly affect reflected light
+var materialShininess = 5.0;
+//
 
 var ctm;
 var ambientColor, diffuseColor, specularColor;
