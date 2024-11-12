@@ -9,7 +9,7 @@
 
 <BODY>
 
-<canvas id="gl-canvas" width="512" height="512" "style=border >
+<canvas id="gl-canvas" width="512" height="512" style="border: 3px lightblue solid" >
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
@@ -19,13 +19,21 @@ Oops ... your browser doesn't support the HTML5 canvas element
 in vec4 aPosition;
 in vec4 aColor;
 
+// import texture from application
+in vec2 aTexCoord;
+
 out vec4 vColor;
+
+out vec2 vTexCoord;
 
 void
 main()
 {
   vColor = aColor;
   gl_Position = aPosition;
+
+  // export texture to fragment shader
+  vTexCoord = aTexCoord;
 }
 </script>
 
@@ -35,6 +43,9 @@ precision mediump float;
 
 in vec4 vColor;
 
+// import texture from vertex shader
+in vec2 vTexCoord;
+
 out vec4 fColor;
 
 uniform sampler2D uTextureMap;
@@ -42,7 +53,14 @@ uniform sampler2D uTextureMap;
 void
 main()
 {
-  fColor = vColor;
+  // For unique color
+  //fColor = vColor;
+  
+  // For Texture
+  // initial, masked, underlying color will show
+  fColor = vColor*texture(uTextureMap, vTexCoord);
+  // not masked, will overwrite underlying colored triangle
+  //fColor = texture(uTextureMap, vTexCoord);
 }
 </script>
 <script type="text/javascript" src="../Common/utility.js"></script>
