@@ -174,11 +174,19 @@ function init()
 
     document.getElementById("ButtonTiger").onclick = function(){
         image.src = "./TIGER.png";
-        configureTexture(image);
+        setTimeout(function (){
+  
+            configureTexture(image);
+                      
+        }, 500);
     };
     document.getElementById("ButtonSpace").onclick = function(){
         image.src = "./SPACE.jpg";
-        configureTexture(image);
+        setTimeout(function (){
+  
+            configureTexture(image);
+                      
+        }, 500);
     };
 
     render();
