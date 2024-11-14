@@ -172,6 +172,15 @@ function init()
     document.getElementById("ButtonZ").onclick = function(){axis = zAxis;};
     document.getElementById("ButtonT").onclick = function(){flag = !flag;};
 
+    document.getElementById("ButtonTiger").onclick = function(){
+        image.src = "./TIGER.png";
+        configureTexture(image);
+    };
+    document.getElementById("ButtonSpace").onclick = function(){
+        image.src = "./SPACE.jpg";
+        configureTexture(image);
+    };
+
     render();
 };
 
