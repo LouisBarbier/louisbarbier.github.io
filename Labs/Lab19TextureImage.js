@@ -55,7 +55,6 @@ var vertexColors = [
 window.onload = init;
 
 var image = document.getElementById("texImage");
-configureTexture(image);
 
 function configureTexture( image ) {
     texture = gl.createTexture();
@@ -153,6 +152,8 @@ function init()
     var positionLoc =gl.getAttribLocation( program, "aPosition");
     gl.vertexAttribPointer(positionLoc, 4, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(positionLoc);
+
+    configureTexture(image);
 
     // texture buffer
     var tBuffer = gl.createBuffer();
