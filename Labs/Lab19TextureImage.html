@@ -9,14 +9,18 @@
 
 <BODY>
 
-<canvas id="gl-canvas" width="512" height="512" "style=border >
+<canvas id="gl-canvas" width="512" height="512" style="border: solid lightblue 3px;">
 Oops ... your browser doesn't support the HTML5 canvas element
 </canvas>
 
-<button id = "ButtonX">Rotate X</button>
-<button id = "ButtonY">Rotate Y</button>
-<button id = "ButtonZ">Rotate Z</button>
-<button id = "ButtonT">Toggle Rotation</button>
+<div>
+  <button id = "ButtonX">Rotate X</button>
+  <button id = "ButtonY">Rotate Y</button>
+  <button id = "ButtonZ">Rotate Z</button>
+  <button id = "ButtonT">Toggle Rotation</button>
+</div>
+
+<img id = "texImage" src = "./TIGER.png" hidden></img>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
 #version 300 es
