@@ -5,7 +5,7 @@ var flag=true;
 
 var points;
 // triangle on right on top
-//
+/*
 points=[
     vec4( -0.75 , -0.50 , 0.0 , 1.0  ),
     vec4(  0.25 ,  0.00 , 0.0 , 1.0  ),
@@ -14,24 +14,24 @@ points=[
     vec4(  0.75 , -0.50 , 0.0 , 1.0  ),
     vec4(  0.75 ,  0.50 , 0.0 , 1.0  )
 ];
-//
+*/
 // triangle on left on top
-/*
+//
 points=[
-    vec4( -0.25 ,  0.00 , 0.0 , 1.0  ),
+    vec4( -0.25 ,  0.00 , 0.0 , 0.5  ),
     vec4(  0.75 , -0.50 , 0.0 , 1.0  ),
     vec4(  0.75 ,  0.50 , 0.0 , 1.0  ),
     vec4( -0.75 , -0.50 , 0.0 , 1.0  ),
-    vec4(  0.25 ,  0.00 , 0.0 , 1.0  ),
+    vec4(  0.25 ,  0.00 , 0.0 , 0.5  ),
     vec4( -0.75 ,  0.50 , 0.0 , 1.0  )
 ];
-*/
+//
 var positionsArray = [];
 
 var colors;
 colors=[
-    vec4( 1.0 , 1.0 , 0.0 , 0.50 ),
-    vec4( 0.0 , 1.0 , 1.0 , 0.50 )
+    vec4( 1.0 , 1.0 , 0.0 , 0.25 ),
+    vec4( 0.0 , 1.0 , 1.0 , 1.0 )
 ];
 var colorsArray = [];
 
@@ -84,8 +84,10 @@ function init()
     document.getElementById("Button").onclick = function(){
         if(flag) gl.enable(gl.DEPTH_TEST);
         else gl.disable(gl.DEPTH_TEST);
+
         if(flag) gl.enable(gl.CULL_FACE);
         else gl.disable(gl.CULL_FACE);
+        
         flag = !flag;
     };
 
