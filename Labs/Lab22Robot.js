@@ -11,6 +11,8 @@ var instanceMatrix;
 
 var modelViewMatrixLoc;
 
+var flag = true;
+
 var vertices = [
 
     vec4( -0.5, -0.5,  0.5, 1.0 ),
@@ -70,6 +72,18 @@ var modelViewLoc;
 
 var pointsArray = [];
 
+var normalsArray = [];
+var lightPosition = vec4(5.0, -2.0, 4.0, 0.0);
+var lightAmbient = vec4(0.2, 0.2, 0.2, 1.0);
+var lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
+var lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
+var materialAmbient = vec4(1.0, 0.0, 1.0, 1.0);
+var materialDiffuse = vec4(1.0, 0.8, 0.0, 1.0);
+var materialSpecular = vec4(1.0, 0.8, 0.0, 1.0);
+var materialShininess = 100.0;
+var ambientColor, diffuseColor, specularColor;
+var viewerPos;
+
 init();
 
 //-------------------------------------------
@@ -102,80 +116,69 @@ function initNodes(Id) {
 
     switch(Id) {
 
-    case torsoId:
+        case torsoId:
+            m = rotate(theta[torsoId], vec3(0, 1, 0) );
+            figure[torsoId] = createNode( m, torso, null, headId );
+            break;
 
-    m = rotate(theta[torsoId], vec3(0, 1, 0) );
-    figure[torsoId] = createNode( m, torso, null, headId );
-    break;
-
-    case headId:
-    case head1Id:
-    case head2Id:
-
-
-    m = translate(0.0, torsoHeight+0.5*headHeight, 0.0);
-	  m = mult(m, rotate(theta[head1Id], vec3(1, 0, 0)))
-	  m = mult(m, rotate(theta[head2Id], vec3(0, 1, 0)));
-    m = mult(m, translate(0.0, -0.5*headHeight, 0.0));
-    figure[headId] = createNode( m, head, leftUpperArmId, null);
-    break;
+        case headId:
+        case head1Id:
+        case head2Id:
+            m = translate(0.0, torsoHeight+0.5*headHeight, 0.0);
+            m = mult(m, rotate(theta[head1Id], vec3(1, 0, 0)))
+            m = mult(m, rotate(theta[head2Id], vec3(0, 1, 0)));
+            m = mult(m, translate(0.0, -0.5*headHeight, 0.0));
+            figure[headId] = createNode( m, head, leftUpperArmId, null);
+            break;
 
 
-    case leftUpperArmId:
+        case leftUpperArmId:
+            m = translate(-(torsoWidth+upperArmWidth), 0.9*torsoHeight, 0.0);
+            m = mult(m, rotate(theta[leftUpperArmId], vec3(1, 0, 0)));
+            figure[leftUpperArmId] = createNode( m, leftUpperArm, rightUpperArmId, leftLowerArmId );
+            break;
 
-    m = translate(-(torsoWidth+upperArmWidth), 0.9*torsoHeight, 0.0);
-	  m = mult(m, rotate(theta[leftUpperArmId], vec3(1, 0, 0)));
-    figure[leftUpperArmId] = createNode( m, leftUpperArm, rightUpperArmId, leftLowerArmId );
-    break;
+        case rightUpperArmId:
+            m = translate(torsoWidth+upperArmWidth, 0.9*torsoHeight, 0.0);
+            m = mult(m, rotate(theta[rightUpperArmId], vec3(1, 0, 0)));
+            figure[rightUpperArmId] = createNode( m, rightUpperArm, leftUpperLegId, rightLowerArmId );
+            break;
 
-    case rightUpperArmId:
+        case leftUpperLegId:
+            m = translate(-(torsoWidth+upperLegWidth), 0.1*upperLegHeight, 0.0);
+            m = mult(m , rotate(theta[leftUpperLegId], vec3(1, 0, 0)));
+            figure[leftUpperLegId] = createNode( m, leftUpperLeg, rightUpperLegId, leftLowerLegId );
+            break;
 
-    m = translate(torsoWidth+upperArmWidth, 0.9*torsoHeight, 0.0);
-	  m = mult(m, rotate(theta[rightUpperArmId], vec3(1, 0, 0)));
-    figure[rightUpperArmId] = createNode( m, rightUpperArm, leftUpperLegId, rightLowerArmId );
-    break;
+        case rightUpperLegId:
+            m = translate(torsoWidth+upperLegWidth, 0.1*upperLegHeight, 0.0);
+            m = mult(m, rotate(theta[rightUpperLegId], vec3(1, 0, 0)));
+            figure[rightUpperLegId] = createNode( m, rightUpperLeg, null, rightLowerLegId );
+            break;
 
-    case leftUpperLegId:
+        case leftLowerArmId:
+            m = translate(0.0, upperArmHeight, 0.0);
+            m = mult(m, rotate(theta[leftLowerArmId], vec3(1, 0, 0)));
+            figure[leftLowerArmId] = createNode( m, leftLowerArm, null, null );
+            break;
 
-    m = translate(-(torsoWidth+upperLegWidth), 0.1*upperLegHeight, 0.0);
-	  m = mult(m , rotate(theta[leftUpperLegId], vec3(1, 0, 0)));
-    figure[leftUpperLegId] = createNode( m, leftUpperLeg, rightUpperLegId, leftLowerLegId );
-    break;
+        case rightLowerArmId:
+            m = translate(0.0, upperArmHeight, 0.0);
+            m = mult(m, rotate(theta[rightLowerArmId], vec3(1, 0, 0)));
+            figure[rightLowerArmId] = createNode( m, rightLowerArm, null, null );
+            break;
 
-    case rightUpperLegId:
+        case leftLowerLegId:
+            m = translate(0.0, upperLegHeight, 0.0);
+            m = mult(m, rotate(theta[leftLowerLegId],vec3(1, 0, 0)));
+            figure[leftLowerLegId] = createNode( m, leftLowerLeg, null, null );
+            break;
 
-    m = translate(torsoWidth+upperLegWidth, 0.1*upperLegHeight, 0.0);
-	  m = mult(m, rotate(theta[rightUpperLegId], vec3(1, 0, 0)));
-    figure[rightUpperLegId] = createNode( m, rightUpperLeg, null, rightLowerLegId );
-    break;
-
-    case leftLowerArmId:
-
-    m = translate(0.0, upperArmHeight, 0.0);
-    m = mult(m, rotate(theta[leftLowerArmId], vec3(1, 0, 0)));
-    figure[leftLowerArmId] = createNode( m, leftLowerArm, null, null );
-    break;
-
-    case rightLowerArmId:
-
-    m = translate(0.0, upperArmHeight, 0.0);
-    m = mult(m, rotate(theta[rightLowerArmId], vec3(1, 0, 0)));
-    figure[rightLowerArmId] = createNode( m, rightLowerArm, null, null );
-    break;
-
-    case leftLowerLegId:
-
-    m = translate(0.0, upperLegHeight, 0.0);
-    m = mult(m, rotate(theta[leftLowerLegId],vec3(1, 0, 0)));
-    figure[leftLowerLegId] = createNode( m, leftLowerLeg, null, null );
-    break;
-
-    case rightLowerLegId:
-
-    m = translate(0.0, upperLegHeight, 0.0);
-    m = mult(m, rotate(theta[rightLowerLegId], vec3(1, 0, 0)));
-    figure[rightLowerLegId] = createNode( m, rightLowerLeg, null, null );
-    break;
+        case rightLowerLegId:
+            m = translate(0.0, upperLegHeight, 0.0);
+            m = mult(m, rotate(theta[rightLowerLegId], vec3(1, 0, 0)));
+            figure[rightLowerLegId] = createNode( m, rightLowerLeg, null, null );
+            break;
 
     }
 
@@ -273,10 +276,22 @@ function rightLowerLeg() {
 }
 
 function quad(a, b, c, d) {
-     pointsArray.push(vertices[a]);
-     pointsArray.push(vertices[b]);
-     pointsArray.push(vertices[c]);
-     pointsArray.push(vertices[d]);
+
+    var t1 = subtract(vertices[b], vertices[a]);
+    var t2 = subtract(vertices[c], vertices[b]);
+    var normal = cross(t1, t2);
+    normal = vec3(normal);
+    
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    normalsArray.push(normal);
+    
+    pointsArray.push(vertices[a]);
+    pointsArray.push(vertices[b]);
+    pointsArray.push(vertices[c]);
+    pointsArray.push(vertices[d]);
+    
 }
 
 
@@ -308,6 +323,8 @@ function init() {
 
     gl.useProgram( program);
 
+    gl.enable(gl.DEPTH_TEST);
+
     instanceMatrix = mat4();
 
     projectionMatrix = ortho(-10.0,10.0,-10.0, 10.0,-10.0,10.0);
@@ -320,25 +337,47 @@ function init() {
 
     cube();
 
+    var nBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, nBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, flatten(normalsArray), gl.STATIC_DRAW);
+    var normalLoc = gl.getAttribLocation(program, "aNormal");
+    gl.vertexAttribPointer(normalLoc, 3, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(normalLoc);
+
+    var ambientProduct = mult(lightAmbient, materialAmbient);
+    var diffuseProduct = mult(lightDiffuse, materialDiffuse);
+    var specularProduct = mult(lightSpecular, materialSpecular);
+    gl.uniform4fv(gl.getUniformLocation(program, "uAmbientProduct"), ambientProduct);
+    gl.uniform4fv(gl.getUniformLocation(program, "uDiffuseProduct"), diffuseProduct );
+    gl.uniform4fv(gl.getUniformLocation(program, "uSpecularProduct"), specularProduct );
+    gl.uniform4fv(gl.getUniformLocation(program, "uLightPosition"), lightPosition );
+    gl.uniform1f(gl.getUniformLocation(program, "uShininess"), materialShininess);
+
+    
     vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, vBuffer );
     gl.bufferData(gl.ARRAY_BUFFER, flatten(pointsArray), gl.STATIC_DRAW);
     var positionLoc = gl.getAttribLocation( program, "aPosition" );
     gl.vertexAttribPointer( positionLoc, 4, gl.FLOAT, false, 0, 0 );
     gl.enableVertexAttribArray( positionLoc );
+    
 
     theta[torsoId] = 10;
-    theta[head1Id] = 20;
-    theta[leftUpperArmId] = 30;
-    theta[leftLowerArmId] = 40;
-    theta[rightUpperArmId] = 50;
-    theta[rightLowerArmId] = 60;
+    theta[head1Id] = 0;
+    theta[leftUpperArmId] = 180;
+    theta[leftLowerArmId] = 0;
+    theta[rightUpperArmId] = 180;
+    theta[rightLowerArmId] = 0;
     theta[leftUpperLegId] = 180;
-    theta[leftLowerLegId] = 70;
+    theta[leftLowerLegId] = 0;
     theta[rightUpperLegId] = 180;
-    theta[rightLowerLegId] = 80;
+    theta[rightLowerLegId] = 0;
     theta[head2Id] = 90;
     for(i=0; i<numNodes; i++) initNodes(i);
+
+    document.getElementById("ButtonT").onclick = function(){
+        flag = !flag;
+    };
 
     render();
 }
@@ -346,7 +385,15 @@ function init() {
 
 function render() {
 
-        gl.clear( gl.COLOR_BUFFER_BIT );
+        gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        if (flag) {
+            for(i=0; i<numNodes; i++)
+            {
+                theta[i] += i/10;
+                initNodes(i);
+            }
+        }
 
         traverse(torsoId);
         requestAnimationFrame(render);
